@@ -11,11 +11,11 @@ frontend:
         - cd package && npm install
     build:
       commands:
-        - cd package && npm run build
+        - npm run build
   artifacts:
-    baseDirectory: package/.next
+    baseDirectory: .next
     files:
-      - 'package/**/*'
+      - '**/*'
   cache:
     paths:
-      - package/node_modules/**/*
+      - node_modules/**/*
