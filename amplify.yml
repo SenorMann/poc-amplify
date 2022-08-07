@@ -5,8 +5,8 @@ frontend:
       commands:
         - npm install -g jfrog-cli-v2-jf
         - jf config add --user ${JFROG_USER} --password ${JFROG_API_KEY} --artifactory-url ${JFROG_URL} --interactive=false
-        - jf rt dl "sls-poc/nextjs-serverless/-/nextjs-serverless-0.0.6.tgz"
-        - mv nextjs-serverless/-/*.tgz .
+        - jf rt dl "sls-poc/poc-amplify/-/poc-amplify-0.0.6.tgz"
+        - mv poc-amplify/-/*.tgz .
         - tar zxvf *.tgz
         - cd package && npm install
     build:
