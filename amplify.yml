@@ -1,0 +1,21 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm install -g jfrog-cli-v2-jf
+        - jf config add --user ${JFROG_USER} --password ${JFROG_API_KEY} --artifactory-url ${JFROG_URL} --interactive=false
+        - jf rt dl "sls-poc/nextjs-serverless/-/nextjs-serverless-0.0.6.tgz"
+        - mv nextjs-serverless/-/*.tgz .
+        - tar zxvf *.tgz
+        - cd package && npm install
+    build:
+      commands:
+        - cd package && npm run build
+  artifacts:
+    baseDirectory: package/.next
+    files:
+      - 'package/**/*'
+  cache:
+    paths:
+      - package/node_modules/**/*

@@ -1,0 +1,31 @@
+name: Deploy to production
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  upload_artefact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Upload Artefact
+        env:
+          JFROG_AUTH: ${{ secrets.JFROG_AUTH }}
+          JFROG_USER: ${{ secrets.JFROG_USER }}
+        run: |
+          echo "registry=https://mlkmahmud.jfrog.io/artifactory/api/npm/sls-poc/" >> .npmrc
+          echo "_auth=${JFROG_AUTH}" >> .npmrc
+          echo "email=${JFROG_USER}" >> .npmrc
+          echo "always-auth-true" >> .npmrc
+          npm publish --registry https://mlkmahmud.jfrog.io/artifactory/api/npm/sls-poc/
+
+  trigger_build:
+    runs-on: ubuntu-latest
+    needs: upload_artefact
+    steps: 
+      - name: Trigger amplify build
+        run: |
+          curl -X POST -d {} "https://webhooks.amplify.us-east-1.amazonaws.com/prod/webhooks?id=889c23ec-6310-4f58-a9a2-a0c4b275acd6&token=zEyzGVKcURAA5M6kEKnItdAw2eYqnNPxQk6i0cXB1MQ&operation=startbuild" -H "Content-Type:application/json"
